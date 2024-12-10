@@ -23,6 +23,8 @@ class FilamentSettingsHubPlugin implements Plugin
 
     private bool $isActive = false;
 
+    public array $settings = [];
+
     public function getId(): string
     {
         return 'filament-settings-hub';
@@ -45,6 +47,13 @@ class FilamentSettingsHubPlugin implements Plugin
     public function allowSocialMenuSettings(bool | \Closure $allow = true): static
     {
         self::$allowSocialMenuSettings = $allow;
+
+        return $this;
+    }
+
+    public function registerSettings(array $settings): static
+    {
+        $this->settings = $settings;
 
         return $this;
     }
@@ -105,7 +114,7 @@ class FilamentSettingsHubPlugin implements Plugin
                 ->group('filament-settings-hub::messages.group');
         }
 
-        FilamentSettingsHub::register($settings);
+        FilamentSettingsHub::register(array_merge($settings, $this->settings));
     }
 
     public static function make(): FilamentSettingsHubPlugin
